@@ -35,7 +35,7 @@ public class ListSEController {
         listSEService.getKids().changeExtremes();
         return new ResponseEntity<>(new ResponseDTO(200,"se han intercambiado los extremos",null),HttpStatus.OK);
     }
-    @GetMapping
+    @GetMapping(path = "invertir")
     public ResponseEntity<ResponseDTO> invert(){
         listSEService.invert();
         return new ResponseEntity<>(new ResponseDTO(200,"se ha invertido la lista",null),HttpStatus.OK);
