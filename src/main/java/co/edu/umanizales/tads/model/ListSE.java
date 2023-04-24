@@ -52,9 +52,10 @@ public class ListSE {
         le digo a nuevo costal que tome con su brazo a la cabeza
         cabeza es igual a nuevo costal
     no
-        meto el niño en un costal y lo asigno a la cabez
+        meto el niño en un costal y lo asigno a la cabeza
      */
-    public void addToStart(Kid kid){
+    public void addToStart(Kid kid)
+    {
         if(head !=null)
         {
             Node newNode = new Node(kid);
@@ -137,6 +138,19 @@ public class ListSE {
         return null;
 }
 
-
+public int getCountKidsByCityByAgeBygender(String code,char gender,byte age){
+        int count=0;
+        if (this.head !=null){
+            Node temp = this.head;
+            while (temp!=null){
+                if (temp.getData().getLocation().getCode().equals(code)
+                          && temp.getData().getGender() == gender && temp.getData().getAge() > age){
+                    count++;
+                }
+                temp = temp.getNext();
+            }
+        }
+        return count;
+    }
 
 }

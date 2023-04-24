@@ -79,4 +79,30 @@ public class ListSEController {
         }
         return new ResponseEntity<>(new ResponseDTO(200,kidsByLocationDTOList,null),HttpStatus.OK);
  }
+
+
+
+     @GetMapping(path = "kidsbyage")
+     public ResponseEntity<ResponseDTO> kidsbyage(@PathVariable byte age){
+        List<KidsByGenderDTO> kidsByGenderDTOList = new ArrayList<>();
+        for (Location loc :locationService.getLocations()){
+            if (loc.getCode().length() == 8) {
+              String nameCity = loc.getName();
+              List<GenderDTO> genderDTOList=new ArrayList<>();
+
+            genderDTOList.add(new GenderDTO('m', ListSEService.getKids().getCountKidsByCityByAgeByGender(loc.getCode(),
+                    'm', age)));
+            genderDTOList.add(new GenderDTO('f', ListSEService.getKids().getCountKidsByCityByAgeByGender(loc.getCode(),
+                    'f', age)));
+
+            int total = genderDTOList.get(0).getQuantity() + genderDTOList.get(1).getQuantity();
+
+            kidsByGenderDTOList.add(new KidsByGenderDTO(nameCity, genderDTOList, total));
+        }
+    }
+
+return new ResponseEntity<>(new ResponseDTO(200, kidsByGenderDTOList, null), HttpStatus.OK);
+
+
+    }
 }
