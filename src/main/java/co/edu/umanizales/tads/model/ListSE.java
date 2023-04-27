@@ -1,5 +1,6 @@
 package co.edu.umanizales.tads.model;
 
+import co.edu.umanizales.tads.controller.dto.ReportKidsLocationGenderDTO;
 import lombok.Data;
 import lombok.Getter;
 
@@ -151,6 +152,18 @@ public int getCountKidsByCityByAgeBygender(String code,char gender,byte age){
             }
         }
         return count;
+    }
+
+    public void getReportKidsBylocationGendersByAge(byte age, ReportKidsLocationGenderDTO report){
+        if(head !=null){
+            Node temp = this.head;
+            while (temp!=null){
+                if (temp.getData().getAge()>age){
+                    report.updateQuantity(temp.getData().getLocation().getName(),temp.getData().getGender());
+                }
+                    temp = temp.getNext();
+            }
+        }
     }
 
 }

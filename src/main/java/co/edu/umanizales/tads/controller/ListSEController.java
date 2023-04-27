@@ -1,8 +1,6 @@
 package co.edu.umanizales.tads.controller;
 
-import co.edu.umanizales.tads.controller.dto.KidDTO;
-import co.edu.umanizales.tads.controller.dto.KidsByLocationDTO;
-import co.edu.umanizales.tads.controller.dto.ResponseDTO;
+import co.edu.umanizales.tads.controller.dto.*;
 import co.edu.umanizales.tads.model.Kid;
 import co.edu.umanizales.tads.model.ListSE;
 import co.edu.umanizales.tads.model.Location;
@@ -83,26 +81,32 @@ public class ListSEController {
 
 
      @GetMapping(path = "kidsbyage")
-     public ResponseEntity<ResponseDTO> kidsbyage(@PathVariable byte age){
+    public ResponseEntity<ResponseDTO> kidsbyage(@PathVariable byte age){
         List<KidsByGenderDTO> kidsByGenderDTOList = new ArrayList<>();
-        for (Location loc :locationService.getLocations()){
-            if (loc.getCode().length() == 8) {
-              String nameCity = loc.getName();
-              List<GenderDTO> genderDTOList=new ArrayList<>();
+        for (Location loc:locationService.getLocations()){
+            if (loc.getCode().length()==8){
+                String nameCity = loc.getName();
+                List<GenderDTO> genderDTOList=new ArrayList<>();
 
-            genderDTOList.add(new GenderDTO('m', ListSEService.getKids().getCountKidsByCityByAgeByGender(loc.getCode(),
-                    'm', age)));
-            genderDTOList.add(new GenderDTO('f', ListSEService.getKids().getCountKidsByCityByAgeByGender(loc.getCode(),
-                    'f', age)));
+                genderDTOList.add(new GenderDTO('m',listSEService.getKids().getCountKidsByCityByAgeBygender(loc.getCode()
+                        , 'm',age)));
+                genderDTOList.add(new GenderDTO('f',listSEService.getKids().getCountKidsByCityByAgeBygender(loc.getCode()
+                        , 'f',age)));
+                int total= genderDTOList.get(0).getQuantity() + genderDTOList.get(1).getQuantity();
 
-            int total = genderDTOList.get(0).getQuantity() + genderDTOList.get(1).getQuantity();
-
-            kidsByGenderDTOList.add(new KidsByGenderDTO(nameCity, genderDTOList, total));
+                kidsByGenderDTOList.add(new KidsByGenderDTO(nameCity,genderDTOList,total));
         }
     }
 
-return new ResponseEntity<>(new ResponseDTO(200, kidsByGenderDTOList, null), HttpStatus.OK);
+    return new ResponseEntity<>(new ResponseDTO(200, kidsByGenderDTOList, null), HttpStatus.OK);
 
 
+    }
+
+    @GetMapping(path= "/kidsbylocationgenders/{age}")
+    public ResponseEntity<ResponseDTO> getReportKidsLocationGenders(@PathVariable byte age){
+        ReportKidsLocationGenderDTO report = new ReportKidsLocationGenderDTO(locationService.getLocationsByCodeSize(8));
+        listSEService.getKids().getReportKidsBylocationGendersByAge(age,report);
+        return new ResponseEntity<>(new ResponseDTO(200,report,null), HttpStatus.OK);
     }
 }
