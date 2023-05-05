@@ -1,9 +1,11 @@
 package co.edu.umanizales.tads.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-public class owner {
+@AllArgsConstructor
+public class Owner {
 
     private String name;
     private String id;

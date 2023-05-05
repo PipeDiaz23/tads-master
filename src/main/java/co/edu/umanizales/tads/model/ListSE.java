@@ -1,10 +1,18 @@
 package co.edu.umanizales.tads.model;
 
+import co.edu.umanizales.tads.controller.dto.KidByPositionDTO;
 import co.edu.umanizales.tads.controller.dto.ReportKidsLocationGenderDTO;
+import co.edu.umanizales.tads.controller.dto.ResponseDTO;
 import lombok.Data;
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Data
 @Getter
@@ -29,21 +37,20 @@ public class ListSE {
     no
         metemos el niño en el costal y ese costal es la cabeza
      */
-    public void add(Kid kid){
-        if(head != null){
-            Node temp = head;
-            while(temp.getNext() !=null)
-            {
-                temp = temp.getNext();
-            }
-            /// Parado en el último
+    public void add(Kid kid) throws IllegalArgumentException {
+        Objects.requireNonNull(kid, "Kid object cannot be null");
+
+        try {
             Node newNode = new Node(kid);
-            temp.setNext(newNode);
-        }
-        else {
+            Optional<Node> lastNode = Optional.ofNullable(head);
+            while (lastNode.isPresent() && lastNode.get().getNext() != null) {
+                lastNode = Optional.ofNullable(lastNode.get().getNext());
+            }
+            lastNode.orElseThrow(NullPointerException::new).setNext(newNode);
+        } catch (NullPointerException e) {
             head = new Node(kid);
         }
-        size ++;
+        size++;
     }
 
     /* Adicionar al inicio
@@ -130,22 +137,74 @@ public class ListSE {
         return count;
     }
 
-    public Kid getKidByIdentification(String identification) {
-        for (Kid kid : kids) {
-            if (kid.getIdentification().equals(identification)) {
-                return kid;
+    public boolean checkKidByIdentification(String identification) {
+        if (this.head != null) {
+            Node temp = this.head;
+            while (temp != null) {
+                if (temp.getData().getIdentification().equals(identification)) {
+                    return true;
+                }
+                temp = temp.getNext();
             }
         }
-        return null;
-}
+        return false;
+    }
 
-public int getCountKidsByCityByAgeBygender(String code,char gender,byte age){
+    //metodo para añadir por posicion
+    public void addByPosition(Kid kid , int position){
+        Node newNode= new Node(kid);
+        if(position<=1){
+            addToStart(kid);
+        }else{
+            Node current= head;
+            for (int i=1 ; i<position-1;i++){
+                current=current.getNext();
+            }
+            newNode.setNext(current.getNext());
+            current.setNext(newNode);
+        }
+    }
+
+    public double getAverAge() {
+        int totalAge=0;
+        int numKids=0;
+        Node temp = this.head;
+        while(temp != null){
+            Kid kid = temp.getData();
+            totalAge +=kid.getAge();
+            numKids++;
+            temp = temp.getNext();
+        }
+
+        if (numKids > 0) {
+            return (double) totalAge / numKids;
+        } else {
+            return 0.0;
+        }
+    }
+
+
+   public int getCountKidsByCityByAgeBygender(String code,char gender,byte age){
         int count=0;
         if (this.head !=null){
             Node temp = this.head;
             while (temp!=null){
                 if (temp.getData().getLocation().getCode().equals(code)
                           && temp.getData().getGender() == gender && temp.getData().getAge() > age){
+                    count++;
+                }
+                temp = temp.getNext();
+            }
+        }
+        return count;
+    }
+
+    public int getCountKidsByDeptoCode(String code){
+        int count =0;
+        if( this.head!=null){
+            Node temp = this.head;
+            while (temp != null){
+                if (temp.getData().getLocation().getCode().substring(0,5).equals(code)){
                     count++;
                 }
                 temp = temp.getNext();

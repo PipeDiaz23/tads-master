@@ -38,36 +38,73 @@ public class ListSEController {
         listSEService.invert();
         return new ResponseEntity<>(new ResponseDTO(200,"se ha invertido la lista",null),HttpStatus.OK);
     }
+    @GetMapping(path = "/averageage")
+    public ResponseEntity<ResponseDTO> getAverAge(){
+        double averageAgee = listSEService.getKids().getAverAge();
+        return new ResponseEntity<>(new ResponseDTO(200,"El promedio de las edades es: "+averageAgee,
+                null),HttpStatus.OK);
+    }
 
-    @PostMapping
-    public ResponseEntity<ResponseDTO> addKid(@RequestBody KidDTO kidDTO) {
-        // Verificar si ya existe un niño con la misma identificación
-        Kid existingKid = listSEService.getKids().getKidByIdentification(kidDTO.getIdentification());
-        if (existingKid != null) {
-            return new ResponseEntity<>(new ResponseDTO(
-                    409, "Ya existe un niño con la misma identificación",
-                    null), HttpStatus.CONFLICT);
+    @GetMapping(path = "/orderBoysToStart")
+    public ResponseEntity<ResponseDTO> orderBoysToStart(){
+        listSEService.getKids().orderBoysToStart();
+        return new ResponseEntity<>(new ResponseDTO(200,"Se añadieron los niños al inicio",null),HttpStatus.OK);
+    }
+
+    @PostMapping(path = "/addbyposition")
+    public ResponseEntity<ResponseDTO> addByPosition(@RequestBody KidByPositionDTO kidByPositionDTO) {
+        // verificar si ya existe un niño con la misma identification
+        boolean isKidRegistered = listSEService.getKids().checkKidByIdentification(kidByPositionDTO.getIdentification());
+        if (isKidRegistered) {
+            return new ResponseEntity<>(new ResponseDTO(404, "Ya existe un niño con la misma identification",
+                    null), HttpStatus.BAD_REQUEST);
         }
         // Si no existe, agregar el niño
-        Location location = locationService.getLocationByCode(kidDTO.getCodeLocation());
+        Location location = locationService.getLocationByCode(kidByPositionDTO.getCodeLocation());
         if (location == null) {
             return new ResponseEntity<>(new ResponseDTO(
                     404, "La ubicación no existe",
                     null), HttpStatus.OK);
         }
-        listSEService.getKids().add(new Kid(
-                kidDTO.getIdentification(),
-                kidDTO.getName(),
-                kidDTO.getAge(),
-                kidDTO.getGender(),
-                location));
+        listSEService.getKids().addByPosition(new Kid(kidByPositionDTO.getIdentification(),
+                        kidByPositionDTO.getName(), kidByPositionDTO.getAge(), kidByPositionDTO.getGender(),location),
+                kidByPositionDTO.getPosition());
         return new ResponseEntity<>(new ResponseDTO(
                 200, "Se ha adicionado el niño",
                 null), HttpStatus.OK);
-    }
+}
 
-    @GetMapping(path = "/kidsbylocations")
-    public ResponseEntity<ResponseDTO> getkidsByLocation(){
+
+        @PostMapping(path = "/addkid")
+        public ResponseEntity<ResponseDTO> addKid(@RequestBody KidDTO kidDTO) {
+            // Verificar si ya existe un niño con la misma identificación
+            boolean isKidRegistered = listSEService.getKids().checkKidByIdentification(kidDTO.getIdentification());
+            if (isKidRegistered) {
+                return new ResponseEntity<>(new ResponseDTO(
+                        404, "Ya existe un niño con la misma identificación",
+                        null), HttpStatus.BAD_REQUEST);
+            }
+            // Si no existe, agregar el niño
+            Location location = locationService.getLocationByCode(kidDTO.getCodeLocation());
+            if (location == null) {
+                return new ResponseEntity<>(new ResponseDTO(
+                        404, "La ubicación no existe",
+                        null), HttpStatus.OK);
+            }
+            listSEService.getKids().add(new Kid(
+                    kidDTO.getIdentification(),
+                    kidDTO.getName(),
+                    kidDTO.getAge(),
+                    kidDTO.getGender(),
+                    location));
+            return new ResponseEntity<>(new ResponseDTO(
+                    200, "Se ha adicionado el niño",
+                    null), HttpStatus.OK);
+        }
+
+
+    @GetMapping(path = "/kidsbyLocations")
+    public ResponseEntity<ResponseDTO> getkidsbyLocation(){
         List<KidsByLocationDTO> kidsByLocationDTOList = new ArrayList<>();
         for(Location loc : locationService.getLocations()){
             int count = listSEService.getKids().getCountKidsByLocationCode(loc.getCode());
@@ -77,6 +114,18 @@ public class ListSEController {
         }
         return new ResponseEntity<>(new ResponseDTO(200,kidsByLocationDTOList,null),HttpStatus.OK);
  }
+
+     @GetMapping(path = "/kidsbydepto")
+     public ResponseEntity<ResponseDTO> getKidsByDeptocode(){
+        List<KidsByLocationDTO> kidsByLocationDTOList1= new ArrayList<>();
+        for (Location loc: locationService.getLocations()){
+            int count = listSEService.getKids().getCountKidsByDeptoCode(loc.getCode());
+            if (count>0){
+                kidsByLocationDTOList1.add(new KidsByLocationDTO(loc,count));
+            }
+        }
+        return new ResponseEntity<>(new ResponseDTO(200,kidsByLocationDTOList1,null), HttpStatus.OK);
+     }
 
 
 

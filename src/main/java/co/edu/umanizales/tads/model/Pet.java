@@ -5,9 +5,12 @@ import lombok.Data;
 @Data
 public class Pet {
     private String name;
-    private String animal;
+    private String id;
     private String race;
+    private Byte age;
     private String color;
-    private String owner;
+    private char gender;
+    private Owner owner;
+    private Location location;
 
 }
