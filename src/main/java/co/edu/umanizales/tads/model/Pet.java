@@ -1,8 +1,10 @@
 package co.edu.umanizales.tads.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 public class Pet {
     private String name;
     private String id;
@@ -12,5 +14,6 @@ public class Pet {
     private char gender;
     private Owner owner;
     private Location location;
+
 
 }
