@@ -313,6 +313,28 @@ public class  ListDeController {
         }
     }
 
+    @RestController
+    @RequestMapping("/pets")
+    public class PetController {
+
+        private final ListDeController petService;
+
+        public PetController(ListDeController Pet) {
+            this.petService = Pet;
+        }
+
+        @DeleteMapping("/{id}")
+        public ResponseEntity<Void> deletePetById(@PathVariable String id) {
+            petService.deletePetByIdTwo(id);
+            return ResponseEntity.noContent().build();
+        }
+
+    }
+
+    private void deletePetByIdTwo(String id) {
+    }
+
+
     @GetMapping(path = "/reportagepets/{age}")
     public ResponseEntity<ResponseDTO> getReportAgePets(@PathVariable byte age){
         try {

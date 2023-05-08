@@ -15,6 +15,7 @@ public class ListDE {
 
     private NodeDE head;
     private int size;
+    private NodeDE tail;
 
     public void add(Pet pet) throws IllegalArgumentException {
         try {
@@ -136,6 +137,7 @@ public class ListDE {
             current = current.getNext();
         }
     }
+
     public void addByPosition(Pet pet, int position) {
         try {
             Objects.requireNonNull(pet, "Pet object cannot be null");
@@ -270,7 +272,6 @@ public class ListDE {
     }
 
 
-
     public void orderBoysToStart() {
         try {
             if (this.head != null) {
@@ -293,117 +294,171 @@ public class ListDE {
         }
     }
 
-    public void intercalateByGender() {
-        try {
-            ListDE boysList = new ListDE();
-            ListDE girlsList = new ListDE();
 
-            NodeDE current = head;
-            while (current != null) {
-                if (current.getData().getGender() == 'M') {
-                    boysList.add(current.getData());
-                } else {
-                    girlsList.add(current.getData());
-                }
-                current = current.getNext();
-            }
+    /*
+   Se verifica si la lista tiene elementos, es decir, si head" es igual a null. Si no hay elementos en la lista,
+   el método retorna.
 
-            ListDE combinedList = new ListDE();
-            NodeDE boysCurrent = boysList.getHead();
-            NodeDE girlsCurrent = girlsList.getHead();
-            while (boysCurrent != null && girlsCurrent != null) {
-                combinedList.add(boysCurrent.getData());
-                combinedList.add(girlsCurrent.getData());
-                boysCurrent = boysCurrent.getNext();
-                girlsCurrent = girlsCurrent.getNext();
-            }
+   Se crea un nodo temporal temp que va a ser igual al elemento que se está buscando en la lista.
+   Se inicializa el nodo temporal con null y se establece su identificador igual al identificador que se desea eliminar.
 
-            while (boysCurrent != null) {
-                combinedList.add(boysCurrent.getData());
-                boysCurrent = boysCurrent.getNext();
-            }
 
-            while (girlsCurrent != null) {
-                combinedList.add(girlsCurrent.getData());
-                girlsCurrent = girlsCurrent.getNext();
-            }
+   Se verifica si el primer elemento cabeza contiene el elemento que se desea eliminar.
+   Si es así, se establece el siguiente elemento como la nueva cabeza y se establece el nodo previo de la nueva cabeza como nulo.
+   Luego, el método retorna.
 
-            head = combinedList.getHead();
-        } catch (NullPointerException e) {
-            throw new IllegalArgumentException("La lista no puede ser nula");
+   Si el elemento que se desea eliminar no es la cabeza de la lista,
+   se busca en la lista el nodo que contiene el identificador que se desea eliminar.
+
+   Si el nodo que contiene el identificador se encuentra en la lista,
+   se establece el nodo siguiente del nodo previo como el nodo siguiente del nodo actual y
+   se establece el nodo previo del nodo siguiente como el nodo previo del nodo actual.
+
+   Si el nodo que contiene el identificador no se encuentra en la lista, el método retorna sin hacer nada.
+   */
+
+    public void deletePetByIdTwo(String id) {
+        // Verificamos si la lista tiene elementos
+        if (head == null) {
+            return;
         }
-    }
+        // Creamos un nodo temporal que va a ser igual al elemento que estoy buscando
+        NodeDE temp = new NodeDE(null);
+        temp.getData().setId(id);
 
-    public int getCountPetsByLocation(String code) {
-        try {
-            Objects.requireNonNull(code, "El código de localización no puede ser nulo");
-            int count = 0;
-            NodeDE current = head;
-            while (current != null) {
-                if (current.getData().getLocation().getCode().equals(code)) {
-                    count++;
-                }
-                current = current.getNext();
+        // Si el primer elemento "cabeza" contiene el elemento que deseo eliminar
+        if (head.getData().getId().equals(id)) {
+            // Establecemos el siguiente como la "cabeza" y establecemos el nodo previo de la nueva cabeza como nulo
+            head = head.getNext();
+            if (head != null) {
+                head.setPrev(null);
             }
-            return count;
-        } catch (NullPointerException e) {
-            throw new IllegalArgumentException("El código de localización no puede ser nulo");
+            return;
         }
-    }
 
 
-    public int getCountPetByDeptoCode(String code) {
-        int count = 0;
-        if (head != null) {
-            NodeDE temp = head;
-            while (temp != null) {
-                try {
-                    String locationCode = temp.getData().getLocation().getCode();
-                    if (locationCode.substring(0, 5).equals(code)) {
+        public void intercalateByGender () {
+            try {
+                ListDE boysList = new ListDE();
+                ListDE girlsList = new ListDE();
+
+                NodeDE current = head;
+                while (current != null) {
+                    if (current.getData().getGender() == 'M') {
+                        boysList.add(current.getData());
+                    } else {
+                        girlsList.add(current.getData());
+                    }
+                    current = current.getNext();
+                }
+
+                ListDE combinedList = new ListDE();
+                NodeDE boysCurrent = boysList.getHead();
+                NodeDE girlsCurrent = girlsList.getHead();
+                while (boysCurrent != null && girlsCurrent != null) {
+                    combinedList.add(boysCurrent.getData());
+                    combinedList.add(girlsCurrent.getData());
+                    boysCurrent = boysCurrent.getNext();
+                    girlsCurrent = girlsCurrent.getNext();
+                }
+
+                while (boysCurrent != null) {
+                    combinedList.add(boysCurrent.getData());
+                    boysCurrent = boysCurrent.getNext();
+                }
+
+                while (girlsCurrent != null) {
+                    combinedList.add(girlsCurrent.getData());
+                    girlsCurrent = girlsCurrent.getNext();
+                }
+
+                head = combinedList.getHead();
+            } catch (NullPointerException e) {
+                throw new IllegalArgumentException("La lista no puede ser nula");
+            }
+        }
+
+        int getCountPetsByLocationStringString;
+        String String;
+        (String String code;
+        String = code;){
+            try {
+                Objects.requireNonNull(code, "El código de localización no puede ser nulo");
+                int count = 0;
+                NodeDE current = head;
+                while (current != null) {
+                    if (current.getData().getLocation().getCode().equals(code)) {
                         count++;
                     }
-                } catch (NullPointerException e) {
-
-                    System.out.println("Error: La locacion no existe");
+                    current = current.getNext();
                 }
-                temp = temp.getNext();
+                return count;
+            } catch (NullPointerException e) {
+                throw new IllegalArgumentException("El código de localización no puede ser nulo");
             }
         }
-        return count;
-    }
 
-    public void getReportPetsByLocationByGendersByAge(byte age, ReportPetsLocationDTO report) {
-        try {
+        public int getCountPetByDeptoCode (String code){
+            int count = 0;
             if (head != null) {
                 NodeDE temp = head;
                 while (temp != null) {
-                    if (temp.getData().getAge() > age) {
-                        report.updateQuantity(temp.getData().getLocation().getName(), temp.getData().getGender());
+                    try {
+                        String locationCode = temp.getData().getLocation().getCode();
+                        if (locationCode.substring(0, 5).equals(code)) {
+                            count++;
+                        }
+                    } catch (NullPointerException e) {
+
+                        System.out.println("Error: La locacion no existe");
                     }
                     temp = temp.getNext();
                 }
             }
-        } catch (Exception e) {
-            System.out.println("Se ha producido un error al generar el informe: " + e.getMessage());
+            return count;
         }
+
+        public void getReportPetsByLocationByGendersByAge ( byte age, ReportPetsLocationDTO
+        ReportPetsLocationDTO report;
+        report){
+            try {
+                if (head != null) {
+                    NodeDE temp = head;
+                    while (temp != null) {
+                        if (temp.getData().getAge() > age) {
+                            report.updateQuantity(temp.getData().getLocation().getName(), temp.getData().getGender());
+                        }
+                        temp = temp.getNext();
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("Se ha producido un error al generar el informe: " + e.getMessage());
+            }
+        }
+
+        public void getReportPetsByAgeByGender ( byte age, ReportAgeQuantityPetsDTO report){
+            try {
+                if (head != null) {
+                    NodeDE temp = head;
+                    while (temp != null) {
+                        if (temp.getData().getAge() == age) {
+                            report.updateQuantity(temp.getData().getAge(), temp.getData().getGender());
+                        }
+                        temp = temp.getNext();
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("Error obteniendo reporte: " + e.getMessage());
+            }
+        }
+
     }
 
     public void getReportPetsByAgeByGender(byte age, ReportAgeQuantityPetsDTO report) {
-        try {
-            if (head != null) {
-                NodeDE temp = head;
-                while (temp != null) {
-                    if (temp.getData().getAge() == age) {
-                        report.updateQuantity(temp.getData().getAge(), temp.getData().getGender());
-                    }
-                    temp = temp.getNext();
-                }
-            }
-        } catch (Exception e) {
-            System.out.println("Error obteniendo reporte: " + e.getMessage());
-        }
     }
 
+    public void getReportPetsByLocationByGendersByAge(byte age, ReportPetsLocationDTO report) {
+    }
 }
 
 
