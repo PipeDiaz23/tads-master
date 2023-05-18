@@ -1,5 +1,7 @@
 package co.edu.umanizales.tads.model;
 
+import co.edu.umanizales.tads.model.Location;
+import co.edu.umanizales.tads.model.Owner;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -14,6 +16,7 @@ public class Pet {
     private char gender;
     private Owner owner;
     private Location location;
+    private Boolean status;
 
 
 }

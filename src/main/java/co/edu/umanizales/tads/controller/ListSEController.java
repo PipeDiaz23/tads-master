@@ -4,15 +4,21 @@ import co.edu.umanizales.tads.controller.dto.*;
 import co.edu.umanizales.tads.model.Kid;
 import co.edu.umanizales.tads.model.ListSE;
 import co.edu.umanizales.tads.model.Location;
+import co.edu.umanizales.tads.model.Ranges;
 import co.edu.umanizales.tads.service.ListSEService;
 import co.edu.umanizales.tads.service.LocationService;
+import co.edu.umanizales.tads.service.RangeService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(path = "/listse")
@@ -21,6 +27,8 @@ public class  ListSEController {
     private ListSEService listSEService;
     @Autowired
     private LocationService locationService;
+    @Autowired
+    private RangeService rangeService;
 
     @GetMapping
     ResponseEntity<ResponseDTO> getKids() {
@@ -183,9 +191,9 @@ public class  ListSEController {
     public ResponseEntity<ResponseDTO> gainPosition(@PathVariable String id, @PathVariable int position) {
         try {
             listSEService.getKids().gainPosition(id, position, listSEService.getKids());
-        } catch (IndexOutOfBoundsException e) {
+        } catch (NullPointerException e) {
             return new ResponseEntity<>(new ResponseDTO(
-                    404, "La posición ingresada no existe en la lista",
+                    404, "La lista está vacía o el nodo con la identificación especificada no existe",
                     null), HttpStatus.BAD_REQUEST);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(new ResponseDTO(
@@ -193,13 +201,16 @@ public class  ListSEController {
                     null), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             return new ResponseEntity<>(new ResponseDTO(
-                    500, "Ocurrió un error al intentar mover el niño de posición",
+                    500, "Ocurrió un error al intentar mover al niño de posición",
                     null), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
         return new ResponseEntity<>(new ResponseDTO(
                 200, "El niño con identificación " + id + " se ha movido a la posición " + position,
                 null), HttpStatus.OK);
     }
+
+
 
     @GetMapping(path = "/backposition/{id}/{position}")
     public ResponseEntity<ResponseDTO> backPosition(@PathVariable String id, @PathVariable int position) {
@@ -278,8 +289,6 @@ public class  ListSEController {
         }
     }
 
-
-
     @GetMapping(path = "/kidsbydepto")
     public ResponseEntity<ResponseDTO> getKidsByDeptoCode() {
         try {
@@ -314,22 +323,43 @@ public class  ListSEController {
         }
     }
 
-
-    @GetMapping(path = "reportsagekids/{age}")
-    public ResponseEntity<ResponseDTO> getReportsKidsByAgeGender(@PathVariable byte age) {
+    @GetMapping(path = "/rangeage")
+    public ResponseEntity<ResponseDTO> informRangeByAge() {
         try {
-            ReportAgeQuantityKidsDTO report = new ReportAgeQuantityKidsDTO(listSEService.getKids().getKids());
-            listSEService.getKids().getReportKidsByAgeByGender(age, report);
-            return new ResponseEntity<>(new ResponseDTO(200, report, null), HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
+            List<RangeDTO> kidsRangeList = new ArrayList<>();
+            for (Ranges i : rangeService.getRanges()) {
+                int quantity = listSEService.getKids().informRangeByAge(i.getFrom(), i.getTo());
+                kidsRangeList.add(new RangeDTO(i, quantity));
+            }
             return new ResponseEntity<>(new ResponseDTO(
-                    404, "No hay niños registrados con la edad ingresada",
-                    null), HttpStatus.BAD_REQUEST);
+                    200, "El rango de los niños es: " + kidsRangeList, null), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new ResponseDTO(
-                    500, "Ocurrió un error al generar el reporte",
-                    null), HttpStatus.INTERNAL_SERVER_ERROR);
+                    500, "Error interno del servidor", null), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @GetMapping(path = "/changeToRound")
+    public ResponseEntity<ResponseDTO> changeToRound() {
+        try {
+            listSEService.getKids().changeToRound();
+        } catch (NullPointerException e) {
+            return new ResponseEntity<>(new ResponseDTO(
+                    404, "La lista está vacía",
+                    null), HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(new ResponseDTO(
+                200, "La lista se ha convertido en una lista circular",
+                null), HttpStatus.OK);
+    }
+
+
 
 }
+
+
+
+
+
+
+

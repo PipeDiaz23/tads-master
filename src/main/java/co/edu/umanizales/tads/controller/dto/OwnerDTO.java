@@ -1,15 +1,15 @@
-package co.edu.umanizales.tads.model;
+package co.edu.umanizales.tads.controller.dto;
 
-import co.edu.umanizales.tads.model.Location;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class Owner {
+public class OwnerDTO {
+
     private String name;
     private String id;
     private String contact;
     private char gender;
-    private Location location;
+    private String codeLocation;
 }

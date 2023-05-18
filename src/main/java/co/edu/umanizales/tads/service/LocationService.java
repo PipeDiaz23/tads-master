@@ -3,6 +3,7 @@ package co.edu.umanizales.tads.service;
 import co.edu.umanizales.tads.model.Location;
 import lombok.Data;
 import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,24 +26,22 @@ public class LocationService {
 
     }
 
-    public List<Location> getLocationsByCodeSize(int size){
+
+    public List<Location> getLocationsByCodeSize(int size) {
         List<Location> listLocations = new ArrayList<>();
-        for(Location loc: locations){
-            if(loc.getCode().length()==size) {
+        for (Location loc : locations){
+            if(loc.getCode().length()==size)
                 listLocations.add(loc);
-            }
         }
         return listLocations;
     }
-
     public Location getLocationByCode(String code){
-
         for(Location loc: locations){
-            if(loc.getCode().equals(code)) {
+            if(loc.getCode().equals(code)){
                 return loc;
             }
         }
         return null;
     }
-
 }
+

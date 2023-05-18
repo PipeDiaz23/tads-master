@@ -1,10 +1,12 @@
 package co.edu.umanizales.tads.controller.dto;
 
 import co.edu.umanizales.tads.model.Location;
+import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Data
 public class ReportPetsLocationDTO {
 
     private List<LocationGenderPetQuantityDTO> locationsGenderPetQuantityDTOS;
@@ -19,7 +21,7 @@ public class ReportPetsLocationDTO {
     public void updateQuantity(String city,char gender){
         for(  LocationGenderPetQuantityDTO loc : locationsGenderPetQuantityDTOS){
             if(loc.getCity().equals(city)){
-                for(GenderPetQuantityDTO genderDto: loc.getGenders()){
+                for(GenderQuantityDTO genderDto: loc.getGenders()){
                     if(genderDto.getGender()==gender){
                         genderDto.setQuantity(genderDto.getQuantity()+1);
 

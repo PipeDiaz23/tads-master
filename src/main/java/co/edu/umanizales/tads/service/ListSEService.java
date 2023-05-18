@@ -9,16 +9,15 @@ import org.springframework.stereotype.Service;
 @Service
 @Data
 public class ListSEService {
+
     private ListSE kids;
 
     public ListSEService() {
-        kids = new ListSE();
-
+        kids=new ListSE();
     }
-
-   public void invert(){
-
+    public void invert(){
         kids.invert();
     }
+
 
 }

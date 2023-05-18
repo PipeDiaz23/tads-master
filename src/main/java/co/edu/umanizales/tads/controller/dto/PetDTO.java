@@ -1,5 +1,7 @@
 package co.edu.umanizales.tads.controller.dto;
 
+import co.edu.umanizales.tads.model.Location;
+import co.edu.umanizales.tads.model.Owner;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,7 +32,6 @@ public class PetDTO {
     @NotBlank(message = "El campo no puede estar vacío")
     private String codeOwner;
     @NotBlank(message = "El campo no puede estar vacío")
-    private String codelocation;
-
+    private String codeLocation;
 
 }

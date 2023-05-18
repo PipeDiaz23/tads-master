@@ -11,8 +11,8 @@
     <groupId>co.edu.umanizales</groupId>
     <artifactId>tads</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>tads</name>
-    <description>tads</description>
+    <name>tdas</name>
+    <description>tdas</description>
     <properties>
         <java.version>17</java.version>
     </properties>
